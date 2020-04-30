@@ -1,0 +1,1 @@
+start "" bin\mintty.exe -o FontQuality=3 -w max bin\php\php.exe src\start.php

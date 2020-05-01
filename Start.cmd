@@ -1,1 +1,1 @@
-start "" bin\mintty.exe -o FontQuality=3 -w max bin\php\php.exe src\start.php
+start "" bin\mintty.exe -o FontHeight=12 -o Term=xterm-256color -w max bin\php\php.exe src\weatherforecast\start.php

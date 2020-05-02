@@ -11,6 +11,7 @@ class controller{
 
     public function __construct() {
         $this->command = new command();
+        touch("user.txt");
         
     }
     

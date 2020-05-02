@@ -24,11 +24,9 @@ class helpCommand{
      */
     public function execute(array $data): bool{
         $list = (new command())->commandlist;
-        echo '------------------help---------------------'."\n";
         foreach($list as $key => $value){
             echo $key."\n";
         }
-        echo '-------------------------------------------'."\n";
         return true;
     }
 }

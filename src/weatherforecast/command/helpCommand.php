@@ -4,18 +4,15 @@ namespace weatherforecast\command;
 
 class helpCommand{
     
-    /**
-     * @return int
-     */
-    public function neceArg(): int{
-        return 1;
-    }
-    
-    /**
-     * @return string
-     */
-    public function commandName(): string{
-        return "help";
+    public $neceArg;
+    public $usage;
+    public $commandName;
+
+
+    public function __construct() {
+        $this->neceArg = 1;
+        $this->usage = "help";
+        $this->commandName = "help";
     }
     
     /**
@@ -26,7 +23,7 @@ class helpCommand{
         $list = (new command())->commandlist;
         echo '------------------help---------------------'."\n";
         foreach($list as $key => $value){
-            echo $key."\n";
+            echo $value["class"]->usage."\n";
         }
         echo '-------------------------------------------'."\n";
         return true;

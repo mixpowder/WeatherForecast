@@ -3,6 +3,11 @@
 namespace weatherforecast\api;
 
 class lineAPI{
+    
+    public $url;
+    public $headers;
+    private $body;
+    private $id;
 
     public function __construct($url,$token){
 	$this->url = $url;
@@ -14,7 +19,7 @@ class lineAPI{
 		$this->id = $ugid;
 	}
 
-	public function Message($message){
+	public function sendText($message){
 		$message = ['type' => 'text','text' => $message];
 		$this->body = json_encode(['to' => $this->id,
                           		  'messages'   => [$message]]);  // 複数送る場合は、array($mesg1,$mesg2) とする。

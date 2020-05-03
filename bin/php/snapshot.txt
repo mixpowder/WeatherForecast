@@ -1,9 +1,9 @@
 This snapshot was automatically generated on
-Wed, 22 Jan 2020 12:30:20 +0000
+Fri, 07 Feb 2020 10:25:43 +0000
 
-Version: 7.2.27
+Version: 7.3.14
 Branch: HEAD
-Build: C:\php-snap-build\php72\vc15\x64\obj\Release
+Build: C:\pocketmine-php-sdk\php-src\x64\Release_TS
 
 Built-in Extensions
 ===========================
@@ -44,12 +44,14 @@ mysqli
 
 
 Dependency information:
-Module: php_curl.dll
+Module: php7ts.dll
 ===========================
 	libcrypto-1_1-x64.dll
 	libssl-1_1-x64.dll
 	libssh2.dll
 	nghttp2.dll
+	libsodium.dll
+	yaml.dll
 
 Module: libssl-1_1-x64.dll
 ===========================
@@ -59,72 +61,20 @@ Module: libssh2.dll
 ===========================
 	libcrypto-1_1-x64.dll
 
-Module: php_enchant.dll
+Module: php_leveldb.dll
 ===========================
-	libenchant.dll
-
-Module: libenchant.dll
-===========================
-	glib-2.dll
-	gmodule-2.dll
-
-Module: gmodule-2.dll
-===========================
-	glib-2.dll
-
-Module: php_ftp.dll
-===========================
-	libcrypto-1_1-x64.dll
-	libssl-1_1-x64.dll
-
-Module: php_intl.dll
-===========================
-	icuuc64.dll
-	icuin64.dll
-	icuio64.dll
-
-Module: icuuc64.dll
-===========================
-	icudt64.dll
-
-Module: icuin64.dll
-===========================
-	icuuc64.dll
-
-Module: icuio64.dll
-===========================
-	icuuc64.dll
-	icuin64.dll
-
-Module: php_ldap.dll
-===========================
-	libsasl.dll
-	libcrypto-1_1-x64.dll
-	libssl-1_1-x64.dll
+	leveldb.dll
 
 Module: php_openssl.dll
 ===========================
 	libcrypto-1_1-x64.dll
 	libssl-1_1-x64.dll
 
-Module: php_pgsql.dll
+Module: php_pthreads.dll
 ===========================
-	libpq.dll
+	pthreadvc3.dll
 
-Module: libpq.dll
-===========================
-	libssl-1_1-x64.dll
-	libcrypto-1_1-x64.dll
-
-Module: php_snmp.dll
+Module: php_crypto.dll
 ===========================
 	libcrypto-1_1-x64.dll
-
-Module: php_sodium.dll
-===========================
-	libsodium.dll
-
-Module: php_pdo_pgsql.dll
-===========================
-	libpq.dll
 

@@ -4,18 +4,15 @@ namespace weatherforecast\command;
 
 class signupCommand{
     
-    /**
-     * @return int
-     */
-    public function neceArg(): int{
-        return 3;
-    }
-    
-    /**
-     * @return string
-     */
-    public function commandName(): string{
-        return "signup";
+    public $neceArg;
+    public $usage;
+    public $commandName;
+
+
+    public function __construct() {
+        $this->neceArg = 4;
+        $this->commandName = "signup";
+        $this->usage = "signup <line or discord> <userID or webhookURL> <cityID>";
     }
     
     /**
@@ -25,6 +22,7 @@ class signupCommand{
     public function execute(array $data): bool{
         $select = $data[1];
         $userID = $data[2];
+        $cityID = $data[3];
         $txt = "user.txt";
         $line = "";
         if (!(filesize($txt) === 0)) {
@@ -32,7 +30,7 @@ class signupCommand{
                 $line .= $value . "\n";
             }
         }
-        $line .= $select.":".$userID."\n";
+        $line .= $select.": ".$userID.": ".$cityID."\n";
         file_put_contents($txt,$line);
         return true;
     }

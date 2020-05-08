@@ -5,54 +5,91 @@ namespace weatherforecast\thread;
 require 'src/weatherforecast/api/lineAPI.php';
 require 'src/weatherforecast/api/discordAPI.php';
 require 'src/weatherforecast/api/livedoorAPI.php';
+//require 'src/weatherforecast/database/databaseManager.php';
 use weatherforecast\api\lineAPI;
 use weatherforecast\api\discordAPI;
 use weatherforecast\api\livedoorAPI;
+use weatherforecast\database\databaseManager;
 
 class sendThread extends \Thread{
     
     public $shutdown = false;
 
     public function run () {
+        $udbManager = new databaseManager("data/userData/user.db",0);
+        $wdbManager = new databaseManager("data/weather/date.db",1);
         $lineapi = new lineAPI('https://api.line.me/v2/bot/message/push','LNvNL/LM8Kee+XK6YmuNgJl2kFQ5s4SKhQW2DpQO9nR1ZchaCSFIUxXyq1Qxsuxee7k4Ck07QqOIQVFV3b3yOGLIFdVM2i/mvnAgqNJVO9HYmi2eCecV857UkjA74Wp/oglXjod1SBTEBMLLMvn9+gdB04t89/1O/w1cDnyilFU=');
         $discordapi = new discordAPI();
         $discordapi->botName("天気予報Bot");
-        $discordapi->avator("http://mix.starfree.jp/icon.ico");
         $livedoorapi = new livedoorAPI();
         date_default_timezone_set('Asia/Tokyo');
-        while(true){
-            if($this->shutdown){
-                break;
-            }
-            if(date("G:i") == "11:30"){
-                $data = [];
-                foreach (file("user.txt", FILE_IGNORE_NEW_LINES) as $value) {
-                    $data[] = explode(": ",$value);
+        while(!$this->shutdown){
+            $this->setTemperature($udbManager,$livedoorapi,$wdbManager);
+            $this->checkDate($udbManager,$livedoorapi,$lineapi,$discordapi,$wdbManager);
+            for($d = 1;$d <= 59; $d++){
+                if($this->shutdown){
+                    break;
+                }else{
+                    sleep(1);
                 }
-                $id = 0;
-                foreach($data as $user){
-                    if(count($user) == 3){
-                        $livedoorapi->setURL($user[2]);
-                        $weather = $livedoorapi->send();
-                        if($user[0] == "line"){
-                            $lineapi->UGID($user[1]);
-                            $lineapi->sendText($weather);
-                            $lineapi->send();
-                        }elseif($user[0] == "discord"){
-                            $discordapi->setWebhookURL($user[1]);
-                            $discordapi->sendText($weather);
-                            $discordapi->send();
-                        }else{
-                            echo "送信設定がおかしいです\nLINEかdiscordにしてください\nおかしいline: {$id}\n";
+            }
+        }
+    }
+    
+    /**
+     * @param databaseManager $udbManager
+     * @param livedoorAPI $livedoorapi
+     * @param databaseManager $wdbManager
+     */
+    private function setTemperature($udbManager,$livedoorapi,$wdbManager){
+        if(date("i") / 60 === 0){
+            foreach($udbManager->getUser() as $user){
+                if(count($user) === 4){
+                    $livedoorapi->setURL($user["cityid"]);
+                    $weather = $livedoorapi->send();
+                    if(!($weather === NULL)){
+                        foreach($weather as $tem){
+                            $wdbManager->setTemperature($tem["date"],$tem["telop"],$tem["temperature"]["max"]["celsius"],$tem["temperature"]["min"]["celsius"],$user["cityid"]);
                         }
-                        $id++;
-                    }else{
-                        echo "入力されているデータがおかしい箇所があります\n修正が必要なline: {$id}\n";
                     }
                 }
-                echo "時間になったため送信しました"."\n";
             }
-            sleep(59);
+        }else{
+        }
+    }
+    
+    /**
+     * 
+     * @param databaseManager $udbManager
+     * @param livedoorAPI $livedoorapi
+     * @param lineAPI $lineapi
+     * @param discordAPI $discordapi
+     * @param databaseManager $wdbManager
+     */
+    private function checkDate($udbManager,$livedoorapi,$lineapi,$discordapi,$wdbManager){
+        if(date("G:i") == "6:00"){
+            $id = 1;
+            foreach($udbManager->getUser() as $user){
+                if(count($user) === 4){
+                    $weather = $wdbManager->getTemperature(date("Y-m-d"),$user["cityid"]);
+                    $weather = "今日は".$weather["weather"]."\n最高気温は".$weather["max"]."\n最低気温は".$weather["min"];
+                    if($user["lod"] === "line"){
+                        $lineapi->UGID($user["uow"]);
+                        $lineapi->sendText($weather);
+                        $lineapi->send();
+                    }elseif($user["lod"] === "discord"){
+                        $discordapi->setWebhookURL($user["uow"]);
+                        $discordapi->sendText($weather);
+                        $discordapi->send();
+                    }else{
+                            echo "送信設定がおかしいです\nLINEかdiscordにしてください\nおかしいline: {$id}\n確認方法 openconfig {$id}\n";
+                    }
+                        $id++;
+                }else{
+                    echo "入力されているデータがおかしい箇所があります\n修正が必要なline: {$id}\n確認方法 openconfig {$id}\n";
+                }
+            }
+            echo "時間になったため送信しました"."\n";
         }
     }
 

@@ -20,10 +20,10 @@ class cityidCommand{
      * @return bool
      */
     public function execute(array $data): bool{
-        if(file_exists("data/".$data[1])){
-            echo file_get_contents("data/".$data[1])."\n";
+        if(file_exists("data/city/".$data[1])){
+            echo file_get_contents("data/city/".$data[1])."\n";
         }elseif($data[1] == "all"){
-            echo file_get_contents("data/cityid.txt")."\n";
+            echo file_get_contents("data/city/cityid.txt")."\n";
         }else{
             echo "県または地方のcityidのファイルが存在しませんでした。\n cityid allで検索かけてください\n";
         }

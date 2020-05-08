@@ -3,7 +3,7 @@ namespace weatherforecast\controller;
 
 use weatherforecast\command\command;
 use weatherforecast\thread\sendThread;
-
+use weatherforecast\database\databaseManager;
 
 class controller{
     
@@ -11,11 +11,11 @@ class controller{
     private $thread;
 
     public function __construct() {
-        $this->command = new command();
-        touch("user.txt");
+        $db = new databaseManager("data/userData/user.db",0);
+        $this->command = new command($db);
         $this->thread = new sendThread();
         $this->thread->start();
-        echo "----------------------------------------------\n";
+        echo "\e[96m"."----------------------------------------------\n";
         echo "__        __         _   _               \n\ \      / /__  __ _| |_| |__   ___ _ __ \n \ \ /\ / / _ \/ _` | __| '_ \ / _ \ '__|\n  \ V  V /  __/ (_| | |_| | | |  __/ |   \n   \_/\_/ \___|\__,_|\__|_| |_|\___|_|   \n\n      _____                            _   \n     |  ___|__  _ __ ___  ___ __ _ ___| |_ \n     | |_ / _ \| '__/ _ \/ __/ _` / __| __|\n     |  _| (_) | | |  __/ (_| (_| \__ \ |_ \n     |_|  \___/|_|  \___|\___\__,_|___/\__|\n                                           \n";
         echo "----------------------------------------------\n";
     }

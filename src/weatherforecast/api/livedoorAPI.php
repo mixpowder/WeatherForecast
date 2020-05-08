@@ -9,8 +9,8 @@ class livedoorAPI {
     
     public function send(){
         $data = json_decode(file_get_contents($this->URL), TRUE);
-        $data = $data["forecasts"][0];
-        $data = "今日は".$data["telop"]."\n最高気温は".$data["temperature"]["max"]["celsius"]."\n最低気温は".$data["temperature"]["min"]["celsius"];
+        $data = $data["forecasts"];
+        //$data = "今日は".$data[0]["telop"]."\n最高気温は".$data[0]["temperature"]["max"]["celsius"]."\n最低気温は".$data[0]["temperature"]["min"]["celsius"];
         return $data;
     }
     

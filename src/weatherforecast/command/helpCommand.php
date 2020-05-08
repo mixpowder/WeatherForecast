@@ -7,12 +7,13 @@ class helpCommand{
     public $neceArg;
     public $usage;
     public $commandName;
+    private $dbManager;
 
-
-    public function __construct() {
+    public function __construct($db) {
         $this->neceArg = 1;
         $this->usage = "help";
         $this->commandName = "help";
+        $this->dbManager = $db;
     }
     
     /**
@@ -20,11 +21,12 @@ class helpCommand{
      * @return bool
      */
     public function execute(array $data): bool{
-        $list = (new command())->commandlist;
+        $list = (new command($this->dbManager))->commandlist;
         echo '------------------help---------------------'."\n";
         foreach($list as $key => $value){
             echo $value["class"]->usage."\n";
         }
+        echo "stop\n";
         echo '-------------------------------------------'."\n";
         return true;
     }

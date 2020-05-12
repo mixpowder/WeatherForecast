@@ -14,17 +14,20 @@ use weatherforecast\database\databaseManager;
 class sendThread extends \Thread{
     
     public $shutdown = false;
+    private $linebot;
     
     public function __construct() {
+        $this->linebot = [];
         foreach(file("data/userData/setting.txt",FILE_SKIP_EMPTY_LINES) as $value){
-            $this->linebot = explode(": ",$value)[1];
+            $line = explode(": ",$value);
+            $this->linebot[$line[0]] = trim($line[1]);
         }
     }
 
     public function run () {
         $udbManager = new databaseManager("data/userData/user.db",0);
         $wdbManager = new databaseManager("data/weather/date.db",1);
-        $lineapi = new lineAPI('https://api.line.me/v2/bot/message/push', $this->linebot);
+        $lineapi = new lineAPI('https://api.line.me/v2/bot/message/push', $this->linebot["ChannelAccesstToken"]);
         $discordapi = new discordAPI();
         $discordapi->botName("天気予報Bot");
         $livedoorapi = new livedoorAPI();
@@ -73,7 +76,7 @@ class sendThread extends \Thread{
      * @param databaseManager $wdbManager
      */
     private function checkDate($udbManager,$livedoorapi,$lineapi,$discordapi,$wdbManager){
-        if(date("G:i") == "6:00"){
+        if(date("G:i") == $this->linebot["Time"]){
             $id = 1;
             foreach($udbManager->getUser() as $user){
                 if(count($user) === 4){
@@ -88,9 +91,9 @@ class sendThread extends \Thread{
                         $discordapi->sendText($weather);
                         $discordapi->send();
                     }else{
-                            echo "送信設定がおかしいです\nLINEかdiscordにしてください\nおかしいline: {$id}\n確認方法 openconfig {$id}\n";
+                        echo "送信設定がおかしいです\nLINEかdiscordにしてください\nおかしいline: {$id}\n確認方法 openconfig {$id}\n";
                     }
-                        $id++;
+                    $id++;
                 }else{
                     echo "入力されているデータがおかしい箇所があります\n修正が必要なline: {$id}\n確認方法 openconfig {$id}\n";
                 }

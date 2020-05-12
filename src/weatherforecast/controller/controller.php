@@ -40,13 +40,9 @@ class controller{
     
     public function shutdown(){
         $this->thread->shutdown = true;
-        $this->join();
-    }
-
-    public function join(){
         $this->thread->join();
     }
-    
+
     public function checkFile(){
         if(!file_exists("data")){
             mkdir("data");
@@ -77,7 +73,7 @@ class controller{
         file_put_contents("data/city/".$pre,$line);
         copy("data/city/北海道地方","data/city/北海道");
         if(!file_exists("data/userData/setting.txt")){
-            file_put_contents("data/userData/setting.txt","ChannelAccesstToken: ");
+            file_put_contents("data/userData/setting.txt","ChannelAccesstToken: \nTime: 6:00");
         }
     }   
 }

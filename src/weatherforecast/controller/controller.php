@@ -76,5 +76,8 @@ class controller{
         }
         file_put_contents("data/city/".$pre,$line);
         copy("data/city/北海道地方","data/city/北海道");
+        if(!file_exists("data/userData/setting.txt")){
+            file_put_contents("data/userData/setting.txt","ChannelAccesstToken: ");
+        }
     }   
 }

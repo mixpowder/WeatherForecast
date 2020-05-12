@@ -14,11 +14,17 @@ use weatherforecast\database\databaseManager;
 class sendThread extends \Thread{
     
     public $shutdown = false;
+    
+    public function __construct() {
+        foreach(file("data/userData/setting.txt",FILE_SKIP_EMPTY_LINES) as $value){
+            $this->linebot = explode(": ",$value)[1];
+        }
+    }
 
     public function run () {
         $udbManager = new databaseManager("data/userData/user.db",0);
         $wdbManager = new databaseManager("data/weather/date.db",1);
-        $lineapi = new lineAPI('https://api.line.me/v2/bot/message/push','LNvNL/LM8Kee+XK6YmuNgJl2kFQ5s4SKhQW2DpQO9nR1ZchaCSFIUxXyq1Qxsuxee7k4Ck07QqOIQVFV3b3yOGLIFdVM2i/mvnAgqNJVO9HYmi2eCecV857UkjA74Wp/oglXjod1SBTEBMLLMvn9+gdB04t89/1O/w1cDnyilFU=');
+        $lineapi = new lineAPI('https://api.line.me/v2/bot/message/push', $this->linebot);
         $discordapi = new discordAPI();
         $discordapi->botName("天気予報Bot");
         $livedoorapi = new livedoorAPI();

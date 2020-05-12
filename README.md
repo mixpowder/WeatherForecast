@@ -5,7 +5,7 @@
 まず起動したら
 cityid 県名をうち、番号を調べます(自分の住んでいるところに一番近い市を選ぶ)
 番号を調べたら
-signup line lineのuserID(※1) cityid
+signup line lineのuserID(※1) cityid\n
 か
 signup discord webhookURL cityid
 を打ち、送信先を設定します

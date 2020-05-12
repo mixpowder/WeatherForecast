@@ -15,4 +15,12 @@ signup discord webhookURL cityid
 起動したあとに、data/userData/setting.txtというファイルが生成されます
 そのファイルの中にChannelAccesstToken: XXXという形で使用するbotのチャネルアクセストークンを入力して保存してください
 
+送信時間を設定したい場合、上と同じくdata/userData/setting.txtというファイルの中のTime: 6:00という部分を変えてください
+初期設定では6時に送信になっています
+設定例
+Time: 19:01 7時1分に送信などなど
+
+で注意なのがファイルを操作した場合必ず再起動してください
+しなければ設定が反映されません
+
 ※1 lineのuserIDについてはlineのMessaging-APIで取得したuserIDを入力してください

@@ -32,8 +32,11 @@ class sendThread extends \Thread{
         $discordapi->botName("天気予報Bot");
         $livedoorapi = new livedoorAPI();
         date_default_timezone_set('Asia/Tokyo');
+        $this->setTemperature($udbManager,$livedoorapi,$wdbManager);
         while(!$this->shutdown){
-            $this->setTemperature($udbManager,$livedoorapi,$wdbManager);
+            if(date("i") / 60 === 0){
+                $this->setTemperature($udbManager,$livedoorapi,$wdbManager);
+            }
             $this->checkDate($udbManager,$livedoorapi,$lineapi,$discordapi,$wdbManager);
             for($d = 1;$d <= 59; $d++){
                 if($this->shutdown){
@@ -51,19 +54,16 @@ class sendThread extends \Thread{
      * @param databaseManager $wdbManager
      */
     private function setTemperature($udbManager,$livedoorapi,$wdbManager){
-        if(date("i") / 60 === 0){
-            foreach($udbManager->getUser() as $user){
-                if(count($user) === 4){
-                    $livedoorapi->setURL($user["cityid"]);
-                    $weather = $livedoorapi->send();
-                    if(!($weather === NULL)){
-                        foreach($weather as $tem){
-                            $wdbManager->setTemperature($tem["date"],$tem["telop"],$tem["temperature"]["max"]["celsius"],$tem["temperature"]["min"]["celsius"],$user["cityid"]);
-                        }
+        foreach($udbManager->getUser() as $user){
+            if(count($user) === 4){
+                $livedoorapi->setURL($user["cityid"]);
+                $weather = $livedoorapi->send();
+                if(!($weather === NULL)){
+                    foreach($weather as $tem){
+                        $wdbManager->setTemperature($tem["date"],$tem["telop"],$tem["temperature"]["max"]["celsius"],$tem["temperature"]["min"]["celsius"],$user["cityid"]);
                     }
                 }
             }
-        }else{
         }
     }
     
@@ -78,10 +78,13 @@ class sendThread extends \Thread{
     private function checkDate($udbManager,$livedoorapi,$lineapi,$discordapi,$wdbManager){
         if(date("G:i") == $this->linebot["Time"]){
             $id = 1;
+            $date = date("Y-m-d");
+            $nextdate = date("Y-m-d",strtotime("1 day"));
             foreach($udbManager->getUser() as $user){
                 if(count($user) === 4){
-                    $weather = $wdbManager->getTemperature(date("Y-m-d"),$user["cityid"]);
-                    $weather = "今日は".$weather["weather"]."\n最高気温は".$weather["max"]."\n最低気温は".$weather["min"];
+                    $today = $wdbManager->getTemperature($date,$user["cityid"]);
+                    $nextday = $wdbManager->getTemperature($nextdate,$user["cityid"]);
+                    $weather = "{$date}の天気は{$today['weather']}\n最高気温は{$today['max']}℃で\n最低気温は{$today['min']}℃です。\n{$nextdate}の天気は{$nextday['weather']}\n最高気温は{$nextday['max']}℃で\n最低気温は{$nextday['min']}℃です。\n※0℃の場合ほとんどエラーです";
                     if($user["lod"] === "line"){
                         $lineapi->UGID($user["uow"]);
                         $lineapi->sendText($weather);
